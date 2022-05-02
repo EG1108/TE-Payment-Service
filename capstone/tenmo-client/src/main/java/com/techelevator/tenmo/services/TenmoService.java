@@ -13,6 +13,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -105,15 +106,20 @@ public class TenmoService {
 
     public Transfer transferBucks(Transfer transfer) {
 
-
-        return restTemplate.exchange(
-                API_BASE_URL + "transfer",
-                HttpMethod.PUT,
-                makeTransferEntity(transfer),
-                Transfer.class
-        ).getBody();
-
-
+        try {
+            restTemplate.exchange(
+                    API_BASE_URL + "transfer",
+                    HttpMethod.PUT,
+                    makeTransferEntity(transfer),
+                    Transfer.class
+            ).getBody();
+            System.out.println("Transfer succeeded.");
+        } catch (ResponseStatusException e) {
+            System.out.println("Transfer failed - insufficient balance.");
+        } catch (IllegalArgumentException f) {
+            System.out.println("Transfer failed - account error.");
+        }
+        return transfer;
     }
 
     public Transfer requestBucks(Transfer transfer) {

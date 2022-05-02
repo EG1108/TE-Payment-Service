@@ -8,8 +8,10 @@ import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -43,7 +45,23 @@ public class AppController {
     @ApiOperation(value = "Bucks Send",
             notes = "This method initiates a transfer of funds between accounts")
     @RequestMapping(path="/transfer", method = RequestMethod.PUT)
-    public Transfer bucksSend(@RequestBody Transfer transfer) {return transferDao.sendBucks(transfer);}
+    public void bucksSend(@RequestBody Transfer transfer, Principal principal) {
+
+        if(transfer.getAmount().compareTo(accountDao.getAccount(principal.getName()).getBalance()) <= 0 &&
+                transfer.getAccount_from() != transfer.getAccount_to()) {
+            transferDao.sendBucks(transfer);
+
+        } else if(transfer.getAmount().compareTo(accountDao.getAccount(principal.getName()).getBalance()) > 0) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.I_AM_A_TEAPOT
+            );
+        } else if(transfer.getAccount_from() == transfer.getAccount_to()) {
+
+            throw new IllegalArgumentException();
+        }
+
+    }
 
     @ApiOperation(value = "List Of Transfers",
             notes = "This method provides a list of all transfers in the current user's account")

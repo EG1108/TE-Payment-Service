@@ -26,7 +26,7 @@ public class ConsoleService {
     }
 
     public void printGreeting() {
-        System.out.println("*********************");
+        System.out.println("\u001B[36m" + "*********************");
         System.out.println("* Welcome to TEnmo! *");
         System.out.println("*********************");
     }
@@ -60,18 +60,18 @@ public class ConsoleService {
             } else {
                 toFrom = "To: " + i.getUsernameTo();
             }
-            System.out.println(i.getTransfer_id() + "\t\t" + toFrom + "\t\t" + "$" + i.getAmount() + "\t\t" + i.getTransfer_status_desc());
+            System.out.println(i.getTransfer_id() + "\t\t" + toFrom + "\t\t" + "$" + i.getAmount() + "\t\t" + statusColor(i.getTransfer_status_desc()));
         }
     }
 
     public void transferHistoryMenu(Transfer i) {
         System.out.println("-----------------------------------------\n\t\t\tTransfer Details\t\t\t" +
                 "\n-----------------------------------------");
-        System.out.println("Id: " + i.getTransfer_id());
-        System.out.println("From: " + i.getUsernameFrom());
-        System.out.println("To: " + i.getUsernameTo());
+        System.out.println("\u001B[37m Id: " + i.getTransfer_id());
+        System.out.println("\u001B[35m From: " + i.getUsernameFrom());
+        System.out.println("\u001B[34m To: " + i.getUsernameTo());
         System.out.println("Type: " + i.getTransfer_type_desc());
-        System.out.println("Status: " + i.getTransfer_status_desc());
+        System.out.println("Status: " + statusColor(i.getTransfer_status_desc()));
         System.out.println("Amount: $" + i.getAmount());
         System.out.println("");
     }
@@ -143,6 +143,16 @@ public class ConsoleService {
 
     public void printErrorMessage() {
         System.out.println("An error occurred. Check the log for details.");
+    }
+
+    public String statusColor(String status) {
+        if(status.equals("Approved")) {
+            return "\u001B[32m" + status;
+        } else if(status.equals("Rejected")) {
+            return "\u001B[31m" + status;
+        } else {
+            return "\u001B[33m" + status;
+        }
     }
 
 }
