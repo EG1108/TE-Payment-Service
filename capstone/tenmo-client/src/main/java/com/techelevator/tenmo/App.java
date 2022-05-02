@@ -141,7 +141,6 @@ public class App {
                 if (pendingId == i.getTransfer_id()) {
                     int option = consoleService.promptForInt("\u001B[32m1: Approve\n\u001B[31m2: Reject\n\u001B[93m0: Don't approve or reject\n\u001b[96m----------\nPlease choose an option: ");
                     if (option == 1 && i.getAmount().compareTo(acUser.getBalance()) <= 0) {
-                        System.out.println(i);
                         tenmoService.approveBucks(i);
                         System.out.println("Transfer approved.");
                         pendingId = 0;
@@ -205,17 +204,18 @@ public class App {
             values.add(user.getId());
         }
             int requestFrom = consoleService.promptForInt("Enter ID of user you are requesting from (0 to cancel):");
-            while (Objects.equals((long) requestFrom, currentUser.getUser().getId()) || !values.contains((long) requestFrom)) {
+
+            if(Objects.equals((long) requestFrom, currentUser.getUser().getId()) || !values.contains((long) requestFrom)) {
                 System.out.println("Invalid recipient.");
-                requestFrom = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel):");
+            } else {
+                BigDecimal amountToRequest = consoleService.promptForBigDecimal("Enter amount:");
+                if(amountToRequest.compareTo(BigDecimal.ZERO) <= 0) {
+                    System.out.println("Invalid transfer amount.");
+                } else {
+                    Transfer makeTransfer = new Transfer(requestFrom, currentUser.getUser().getId().intValue(), amountToRequest);
+                    tenmoService.requestBucks(makeTransfer);
+                }
             }
-            BigDecimal amountToRequest = consoleService.promptForBigDecimal("Enter amount:");
-            while (amountToRequest.compareTo(BigDecimal.ZERO) <= 0) {
-                System.out.println("Invalid transfer amount.");
-                amountToRequest = consoleService.promptForBigDecimal("Enter amount:");
-            }
-            Transfer makeTransfer = new Transfer(requestFrom, currentUser.getUser().getId().intValue(), amountToRequest);
-            tenmoService.requestBucks(makeTransfer);
 
 
         }
