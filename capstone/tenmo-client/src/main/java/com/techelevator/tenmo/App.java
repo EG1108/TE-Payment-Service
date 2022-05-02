@@ -64,9 +64,10 @@ public class App {
     private void handleLogin() {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
-        tenmoService.setAuthToken(currentUser.getToken());
-        if (currentUser == null) {
-            consoleService.printErrorMessage();
+        try {
+            tenmoService.setAuthToken(currentUser.getToken());
+        } catch (NullPointerException e) {
+            System.out.println("Incorrect Username or Password");
         }
 
     }
@@ -106,7 +107,7 @@ public class App {
     private void viewCurrentBalance() {
 
         Account acUser = tenmoService.getAccount(currentUser.getUser().getUsername());
-        System.out.println("Your current account balance is: $" + acUser.getBalance());
+        System.out.println("Your current account balance is: \u001B[92m$" + acUser.getBalance() + "\u001b[96m");
 
     }
 
@@ -138,7 +139,7 @@ public class App {
             Account acUser = tenmoService.getAccount(currentUser.getUser().getUsername());
             for (Transfer i : transfers) {
                 if (pendingId == i.getTransfer_id()) {
-                    int option = consoleService.promptForInt("1: Approve\n2: Reject\n0: Don't approve or reject\n----------\nPlease choose an option: ");
+                    int option = consoleService.promptForInt("\u001B[32m1: Approve\n\u001B[31m2: Reject\n\u001B[93m0: Don't approve or reject\n\u001b[96m----------\nPlease choose an option: ");
                     if (option == 1 && i.getAmount().compareTo(acUser.getBalance()) <= 0) {
                         System.out.println(i);
                         tenmoService.approveBucks(i);
@@ -200,7 +201,7 @@ public class App {
         List<User> listUsers = tenmoService.userList();
         Set<Long> values = new HashSet<>();
         for (User user : listUsers) {
-            System.out.println(user.getId() + " : " + user.getUsername());
+            System.out.println("\u001B[97m" + user.getId() + " \u001b[96m:\u001b[94m " + user.getUsername() + "\u001b[96m");
             values.add(user.getId());
         }
             int requestFrom = consoleService.promptForInt("Enter ID of user you are requesting from (0 to cancel):");

@@ -26,7 +26,7 @@ public class ConsoleService {
     }
 
     public void printGreeting() {
-        System.out.println("\u001B[36m" + "*********************");
+        System.out.println("\u001B[96m" + "*********************");
         System.out.println("* Welcome to TEnmo! *");
         System.out.println("*********************");
     }
@@ -60,20 +60,20 @@ public class ConsoleService {
             } else {
                 toFrom = "To: " + i.getUsernameTo();
             }
-            System.out.println(i.getTransfer_id() + "\t\t" + toFrom + "\t\t" + "$" + i.getAmount() + "\t\t" + statusColor(i.getTransfer_status_desc()));
+            System.out.println("\u001b[97m" + i.getTransfer_id() + "\t\t\u001b[94m" + toFrom + "\t\t" + "\u001B[92m$" + i.getAmount() + "\t\t" + statusColor(i.getTransfer_status_desc()) + "\u001b[96m");
         }
     }
 
     public void transferHistoryMenu(Transfer i) {
-        System.out.println("-----------------------------------------\n\t\t\tTransfer Details\t\t\t" +
+        System.out.println("\u001b[96m-----------------------------------------\n\t\t\tTransfer Details\t\t\t" +
                 "\n-----------------------------------------");
-        System.out.println("\u001B[37m Id: " + i.getTransfer_id());
-        System.out.println("\u001B[35m From: " + i.getUsernameFrom());
-        System.out.println("\u001B[34m To: " + i.getUsernameTo());
-        System.out.println("Type: " + i.getTransfer_type_desc());
-        System.out.println("Status: " + statusColor(i.getTransfer_status_desc()));
-        System.out.println("Amount: $" + i.getAmount());
-        System.out.println("");
+        System.out.println("\u001b[96mId: \u001B[97m" + i.getTransfer_id());
+        System.out.println("\u001b[96mFrom: \u001B[95m" + i.getUsernameFrom());
+        System.out.println("\u001b[96mTo: \u001B[34m" + i.getUsernameTo());
+        System.out.println("\u001b[96mType: \u001b[0m" + i.getTransfer_type_desc());
+        System.out.println("\u001b[96mStatus: " + statusColor(i.getTransfer_status_desc()));
+        System.out.println("\u001b[96mAmount: \u001B[92m$" + i.getAmount());
+        System.out.println("\u001b[96m");
     }
 
     public void sendBucksMenu(List<User> listUsers) {
@@ -82,7 +82,7 @@ public class ConsoleService {
         System.out.println("ID\t\t\t\tName");
         System.out.println("-------------------------------------------");
         for (User user : listUsers) {
-            System.out.println(user.getId() + "\t\t\t" + user.getUsername());
+            System.out.println("\u001B[97m" + user.getId() + "\t\t\t\u001b[94m" + user.getUsername() + "\u001b[96m");
         }
         System.out.println("-------------------------------------------\n");
     }
@@ -98,7 +98,7 @@ public class ConsoleService {
             String toFrom = "";
             toFrom = i.getUsernameTo();
             System.out.println(String.format(formatStr,
-                    i.getTransfer_id(), toFrom, "$ " + i.getAmount()));
+                    "\u001b[97m" + i.getTransfer_id(), "\u001b[94m" + toFrom, "\u001B[92m$ " + i.getAmount() + "\u001b[96m"));
         }
         System.out.println("-------------------------------------------");
     }
@@ -151,7 +151,7 @@ public class ConsoleService {
         } else if(status.equals("Rejected")) {
             return "\u001B[31m" + status;
         } else {
-            return "\u001B[33m" + status;
+            return "\u001B[93m" + status;
         }
     }
 
